@@ -903,6 +903,17 @@ declare namespace firebase {
          */
         updateProfile(profile:UserProfile):Promise<void>;
     }
+
+    export interface ObserverFn{
+        (user:firebase.User):void; 
+    }
+
+    export namespace auth {
+        export interface Error {
+            code:string;
+            message:string;
+        }
+    }
         
     /**
      * (description)
@@ -944,6 +955,17 @@ declare namespace firebase {
          * @type {User}
          */
         currentUser:User;
+
+        /**
+         * Adds an observer for auth state changes.
+         * 
+         * @param {(firebase.Observer|ObserverFn)} nextOrObserver An observer object or a function triggered on change.
+         * @param {Function} [opt_error] Optional A function triggered on auth error.
+         * @param {Function} [opt_completed] Optional A function triggered when the observer is removed.
+         * @returns {Function} The unsubscribe function for the observer.
+        
+         */
+        onAuthStateChanged(nextOrObserver:firebase.Observer|ObserverFn, opt_error?:(err:firebase.auth.Error)=>void, opt_completed?:()=>void):Function; 
     }
     
     /**
@@ -1043,6 +1065,19 @@ declare namespace firebase {
          * Returns a Reference to the Query's location.
          */
         ref:DatabaseReference;
+        /**
+         * Creates a Query with the specified starting point.
+         * 
+         * Using startAt(), endAt(), and equalTo() allows you to choose arbitrary starting and ending points for your queries.
+         * 
+         * The starting point is inclusive, so children with exactly the specified value will be included in the query. 
+         * The optional key argument can be used to further limit the range of the query. If it is specified, then children that have exactly the specified value must also have a key name greater than or equal to the specified key.
+         * 
+         * @param {any} value The value to start at. The argument type depends on which orderBy*() function was used in this query. Specify a value that matches the orderBy*() type. When used in combination with orderByKey(), the value must be a string.
+         * @param {any} [key] The child key to start at, among the children with the previously specified priority. This argument is only allowed if ordering by priority.
+         * @returns {DatabaseQuery} 
+         */
+        startAt(value:any,key?:any):DatabaseQuery;
         /**
          * Creates a Query with the specified ending point.
          * 
